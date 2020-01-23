@@ -1,0 +1,15 @@
+{
+  "name": "worldwax-cropper",
+  "version": "0.0.1",
+  "description": "Image upload and cropper sandbox",
+  "main": "index.html",
+  "author": "Norman José Pino Añez <normanpino@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html --detailed-report"
+  },
+  "devDependencies": {
+    "node-elm-compiler": "^5.0.4"
+  }
+}

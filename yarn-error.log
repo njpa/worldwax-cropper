@@ -1,0 +1,43 @@
+Arguments: 
+  /usr/local/Cellar/node/9.8.0/bin/node /usr/local/Cellar/yarn/1.12.3/libexec/bin/yarn.js dev
+
+PATH: 
+  /Users/norm/.exenv/shims:/Users/norm/.exenv/bin:/Users/norm/.rvm/gems/ruby-2.4.1/bin:/Users/norm/.rvm/gems/ruby-2.4.1@global/bin:/Users/norm/.rvm/rubies/ruby-2.4.1/bin:/usr/local/Cellar/git/2.6.3:/Library/Frameworks/Python.framework/Versions/3.4/bin:/usr/local/heroku/bin:~/.composer/vendor/bin:/usr/local/Cellar/node/9.8.0/bin:/usr/local/Cellar/elixir/1.6.1:/usr/local/elm-format:/usr/local/php5/bin:/usr/local/mysql/bin:/usr/local/mysql/lib:/usr/local/activator-1.3.4:/usr/local/bin/mongo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin:/Users/norm/.exenv/shims:/Users/norm/.exenv/bin:/Users/norm/.rvm/gems/ruby-2.4.1/bin:/Users/norm/.rvm/gems/ruby-2.4.1@global/bin:/Users/norm/.rvm/rubies/ruby-2.4.1/bin:/usr/local/Cellar/git/2.6.3:/Library/Frameworks/Python.framework/Versions/3.4/bin:/usr/local/heroku/bin:~/.composer/vendor/bin:/usr/local/Cellar/node/9.8.0/bin:/usr/local/Cellar/elixir/1.6.1:/usr/local/elm-format:/usr/local/php5/bin:/usr/local/mysql/bin:/usr/local/mysql/lib:/usr/local/activator-1.3.4:/usr/local/bin/mongo/bin:/Users/norm/.rvm/bin
+
+Yarn version: 
+  1.12.3
+
+Node version: 
+  9.8.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/norm/dev/elm/worldwax-cropper/package.json: Unexpected token } in JSON at position 316
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:1631:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:304:30)
+      at /usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:315:13
+      at <anonymous>
+
+npm manifest: 
+  {
+    "name": "worldwax-cropper",
+    "version": "0.0.1",
+    "description": "Image upload and cropper sandbox",
+    "main": "index.html",
+    "author": "Norman José Pino Añez <normanpino@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+      "dev": "parcel index.html",
+    	"build": "parcel build index.html --detailed-report",
+  	}
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
