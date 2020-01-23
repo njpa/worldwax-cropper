@@ -141,23 +141,19 @@ update msg model =
             )
 
         GotPreview preview ->
-            let
-                p =
-                    Debug.toString preview
-            in
-                ( { model
-                    | state = FileReceived
-                    , uploadedImage = preview
-                    , cropper =
-                        Cropper.init
-                            { url =
-                                preview
-                                --Image.image
-                            , crop = { width = 500, height = 500 }
-                            }
-                  }
-                , Cmd.none
-                )
+            ( { model
+                | state = FileReceived
+                , uploadedImage = preview
+                , cropper =
+                    Cropper.init
+                        { url =
+                            preview
+                            --Image.image
+                        , crop = { width = 500, height = 500 }
+                        }
+              }
+            , Cmd.none
+            )
 
         Clear ->
             ( { model | uploadedImage = "", state = ImageLoadedInCropper }
