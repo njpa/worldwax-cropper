@@ -1,8 +1,32 @@
 import { Elm } from './src/Main.elm'
+import { EXIF } from './exif.js'
 
 var app = Elm.Main.init({
   node: document.getElementById('app')
 });
+
+app.ports.orientationRequest.subscribe(function(data) {
+	var binary = data.split(",")[1];
+	var exif = EXIF.readFromBinaryFile(base64ToArrayBuffer(binary));
+	var orientation = exif.Orientation
+
+	resetOrientation(data, orientation, function(resetBase64Image) {
+		app.ports.orientationResponse.send(
+			resetBase64Image
+		);
+	});
+});
+
+function base64ToArrayBuffer (base64) {
+    base64 = base64.replace(/^data\:([^\;]+)\;base64,/gmi, '');
+    var binaryString = atob(base64);
+    var len = binaryString.length;
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
 
 app.ports.cropperData.subscribe(function(data) {
   var url = data.url;
@@ -45,3 +69,40 @@ app.ports.cropperData.subscribe(function(data) {
     );
   };
 });
+
+function resetOrientation(srcBase64, srcOrientation, callback) {
+  var img = new Image();
+
+  img.onload = function() {
+    var width = img.width,
+        height = img.height,
+        canvas = document.createElement('canvas'),
+        ctx = canvas.getContext("2d");
+
+    // set proper canvas dimensions before transform & export
+    if (4 < srcOrientation && srcOrientation < 9) {
+      canvas.width = height/2;
+      canvas.height = width/2;
+    } else {
+      canvas.width = width/2;
+      canvas.height = height/2;
+    }
+
+    // transform context before drawing image
+    switch (srcOrientation) {
+      case 1: ctx.transform(0.5, 0, 0, 0.5, 0, 0); break; // 0
+      case 3: ctx.transform(-0.5, 0, 0, -0.5, width/2, height/2); break; // 180
+      case 6: ctx.transform(0, 0.5, -0.5, 0, height/2, 0); break;      // 90
+      case 8: ctx.transform(0, -0.5, 0.5, 0, 0, width/2); break;        // -90
+      default: break;
+    }
+
+    // draw image
+    ctx.drawImage(img, 0, 0);
+
+    // export base64
+    callback(canvas.toDataURL('image/jpeg'));
+  };
+
+  img.src = srcBase64;
+}

@@ -14,10 +14,16 @@ import Json.Decode as D
 -- PORTS
 
 
-port testtest : (String -> msg) -> Sub msg
+port orientationRequest : String -> Cmd msg
 
 
 port cropperData : Cropper.CropData -> Cmd msg
+
+
+port testtest : (String -> msg) -> Sub msg
+
+
+port orientationResponse : (String -> msg) -> Sub msg
 
 
 
@@ -41,6 +47,7 @@ main =
 type alias Model =
     { state : State
     , hoverUpload : Bool
+    , imageRotated : String
     , uploadedImage : String
     , cropper : Cropper.Model
     , croppedImage : String
@@ -52,6 +59,7 @@ init _ =
     ( { state = NotAsked
       , hoverUpload = False
       , uploadedImage = ""
+      , imageRotated = ""
       , cropper =
             Cropper.init
                 { url = ""
@@ -64,20 +72,6 @@ init _ =
 
 
 
--- TYPES
-
-
-type State
-    = NotAsked
-    | Asked
-    | FileSelected
-    | FileReceived
-    | ImageLoadedInCropper
-    | ImageCropped
-    | Confirmed
-
-
-
 -- SUBSCRIPTIONS
 
 
@@ -86,7 +80,23 @@ subscriptions model =
     Sub.batch
         [ Sub.map ToCropper (Cropper.subscriptions model.cropper)
         , testtest GotCroppedImage
+        , orientationResponse GotOrientation
         ]
+
+
+
+-- TYPES
+
+
+type State
+    = NotAsked
+    | Asked
+    | FileSelected
+    | FileReceived
+    | FileOrientationReceived
+    | ImageLoadedInCropper
+    | ImageCropped
+    | Confirmed
 
 
 
@@ -99,6 +109,7 @@ type Msg
     | DragEnter
     | DragLeave
     | GotFile File (List File)
+    | GotOrientation String
     | GotPreview String
     | Clear
     | ToCropper Cropper.Msg
@@ -144,11 +155,17 @@ update msg model =
             ( { model
                 | state = FileReceived
                 , uploadedImage = preview
+              }
+            , orientationRequest preview
+            )
+
+        GotOrientation imageRotated ->
+            ( { model
+                | state = FileOrientationReceived
+                , imageRotated = imageRotated
                 , cropper =
                     Cropper.init
-                        { url =
-                            preview
-                            --Image.image
+                        { url = imageRotated
                         , crop = { width = 500, height = 500 }
                         }
               }
@@ -214,6 +231,11 @@ view model =
 
             FileReceived ->
                 viewCropper model
+
+            FileOrientationReceived ->
+                div []
+                    [ viewCropper model
+                    ]
 
             ImageLoadedInCropper ->
                 div []
