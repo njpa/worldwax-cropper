@@ -80,22 +80,42 @@ function resetOrientation(srcBase64, srcOrientation, callback) {
         ctx = canvas.getContext("2d");
 
     // set proper canvas dimensions before transform & export
-    if (4 < srcOrientation && srcOrientation < 9) {
-      canvas.width = height/2;
-      canvas.height = width/2;
-    } else {
-      canvas.width = width/2;
-      canvas.height = height/2;
-    }
+		if(img.width < 2000 || img.height < 2000) {
+			if (4 < srcOrientation && srcOrientation < 9) {
+				canvas.width = height;
+				canvas.height = width;
+			} else {
+				canvas.width = width;
+				canvas.height = height;
+			}
+		} else {
+			if (4 < srcOrientation && srcOrientation < 9) {
+				canvas.width = height/2;
+				canvas.height = width/2;
+			} else {
+				canvas.width = width/2;
+				canvas.height = height/2;
+			}
+		}
 
     // transform context before drawing image
-    switch (srcOrientation) {
-      case 1: ctx.transform(0.5, 0, 0, 0.5, 0, 0); break; // 0
-      case 3: ctx.transform(-0.5, 0, 0, -0.5, width/2, height/2); break; // 180
-      case 6: ctx.transform(0, 0.5, -0.5, 0, height/2, 0); break;      // 90
-      case 8: ctx.transform(0, -0.5, 0.5, 0, 0, width/2); break;        // -90
-      default: break;
-    }
+		if(img.width < 2000 || img.height < 2000) {
+			switch (srcOrientation) {
+				case 1: ctx.transform(1, 0, 0, 1, 0, 0); break; // 0
+				case 3: ctx.transform(-1, 0, 0, -1, width, height); break; // 180
+				case 6: ctx.transform(0, 1, -1, 0, height, 0); break;      // 90
+				case 8: ctx.transform(0, -1, 1, 0, 0, width); break;        // -90
+				default: break;
+			}
+		} else {
+			switch (srcOrientation) {
+				case 1: ctx.transform(0.5, 0, 0, 0.5, 0, 0); break; // 0
+				case 3: ctx.transform(-0.5, 0, 0, -0.5, width/2, height/2); break; // 180
+				case 6: ctx.transform(0, 0.5, -0.5, 0, height/2, 0); break;      // 90
+				case 8: ctx.transform(0, -0.5, 0.5, 0, 0, width/2); break;        // -90
+				default: break;
+			}
+		}
 
     // draw image
     ctx.drawImage(img, 0, 0);
